@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="fav-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#163523"/>
+      <stop offset="0.5" stop-color="#0a151b"/>
+      <stop offset="1" stop-color="#061018"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.38" r="0.55">
+      <stop offset="0" stop-color="#9bea67" stop-opacity="0.32"/>
+      <stop offset="0.5" stop-color="#65c94a" stop-opacity="0.08"/>
+      <stop offset="1" stop-color="#65c94a" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fff1a8"/>
+      <stop offset="0.42" stop-color="#f5c84f"/>
+      <stop offset="1" stop-color="#b9771d"/>
+    </linearGradient>
+    <linearGradient id="grass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#b5f47f"/>
+      <stop offset="1" stop-color="#71c94b"/>
+    </linearGradient>
+    <pattern id="grid" width="72" height="72" patternUnits="userSpaceOnUse">
+      <path d="M72 0H0V72" fill="none" stroke="#a7ef75" stroke-opacity="0.05" stroke-width="2"/>
+    </pattern>
+    <filter id="shadow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="30"/>
+    </filter>
+    <filter id="drop" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#000000" flood-opacity="0.55"/>
+    </filter>
+    <clipPath id="round">
+      <rect width="1024" height="1024" rx="224"/>
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#round)">
+    <rect width="1024" height="1024" fill="url(#fav-bg)"/>
+    <rect width="1024" height="1024" fill="url(#grid)"/>
+    <rect width="1024" height="1024" fill="url(#glow)"/>
+
+    <!-- 金色织环 -->
+    <circle cx="512" cy="462" r="330" fill="none" stroke="url(#gold)" stroke-opacity="0.28" stroke-width="10" stroke-dasharray="2 34"/>
+    <circle cx="512" cy="462" r="382" fill="none" stroke="#8fe264" stroke-opacity="0.12" stroke-width="4"/>
+
+    <!-- 方块阴影 -->
+    <ellipse cx="512" cy="778" rx="280" ry="48" fill="#000" opacity="0.6" filter="url(#shadow)"/>
+
+    <!-- 等距草方块 -->
+    <g transform="translate(512 448) scale(11.2) translate(-32 -32)" filter="url(#drop)">
+      <polygon points="32,4 58,18 32,32 6,18" fill="url(#grass)"/>
+      <polygon points="6,18 32,32 32,60 6,46" fill="#7d5233"/>
+      <polygon points="58,18 32,32 32,60 58,46" fill="#96633f"/>
+      <polygon points="6,18 32,32 32,40 6,26" fill="#6fbd48"/>
+      <polygon points="58,18 32,32 32,40 58,26" fill="#7fd055"/>
+      <g fill="#8ad65c" opacity="0.9">
+        <rect x="12" y="14" width="6" height="5"/><rect x="23" y="8" width="5" height="5"/>
+        <rect x="37" y="13" width="7" height="5"/><rect x="47" y="20" width="5" height="4"/>
+        <rect x="18" y="24" width="5" height="4"/>
+      </g>
+      <g fill="#674226" opacity="0.8">
+        <rect x="12" y="32" width="6" height="5"/><rect x="23" y="40" width="7" height="5"/>
+        <rect x="10" y="45" width="4" height="6"/><rect x="20" y="52" width="6" height="4"/>
+      </g>
+      <g fill="#7d4e2e" opacity="0.75">
+        <rect x="40" y="33" width="6" height="5"/><rect x="48" y="42" width="6" height="5"/>
+        <rect x="39" y="50" width="5" height="4"/><rect x="48" y="55" width="5" height="4"/>
+      </g>
+    </g>
+
+    <!-- 金色 W 织线 -->
+    <g filter="url(#drop)">
+      <path d="M292 758 L382 886 L512 772 L642 886 L732 758"
+            fill="none" stroke="#000" stroke-opacity="0.38" stroke-width="46" stroke-linecap="round" stroke-linejoin="round" transform="translate(0 12)"/>
+      <path d="M292 758 L382 886 L512 772 L642 886 L732 758"
+            fill="none" stroke="url(#gold)" stroke-width="38" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M292 758 L382 886 L512 772 L642 886 L732 758"
+            fill="none" stroke="#fff6c8" stroke-opacity="0.38" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+
+    <!-- 命令徽章 -->
+    <g transform="translate(706 238)" filter="url(#drop)">
+      <rect width="210" height="108" rx="28" fill="#08121a" stroke="#8fe264" stroke-opacity="0.85" stroke-width="5"/>
+      <rect x="13" y="13" width="184" height="82" rx="18" fill="none" stroke="#fff" stroke-opacity="0.1" stroke-width="2"/>
+      <text x="24" y="76" font-family="Consolas, 'Cascadia Mono', monospace" font-size="64" font-weight="700" fill="#a9ee7a">&gt;_</text>
+      <circle cx="178" cy="30" r="7" fill="#f5c84f"/>
+    </g>
+
+    <!-- 粒子 -->
+    <g fill="#f5c84f">
+      <rect x="176" y="314" width="14" height="14" opacity="0.85"/>
+      <rect x="836" y="706" width="10" height="10" opacity="0.7"/>
+      <rect x="226" y="790" width="8" height="8" opacity="0.55"/>
+    </g>
+    <g fill="#8fe264" opacity="0.8">
+      <rect x="842" y="388" width="6" height="6"/>
+      <rect x="166" y="576" width="5" height="5"/>
+    </g>
+  </g>
+
+  <rect x="26" y="26" width="972" height="972" rx="200" fill="none" stroke="#ffffff" stroke-opacity="0.1" stroke-width="4"/>
+</svg>

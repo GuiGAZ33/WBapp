@@ -1,0 +1,18 @@
+{
+  "name": "world-weave-app",
+  "version": "2.0.3",
+  "private": true,
+  "description": "世界织卷APP · 纯前端 + 零依赖账号服务（手机验证码 / QQ 邮箱 / 微软 Xbox / 离线账号）",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "check": "node --check server/server.js && node --check server/admin.js && node --check admin/admin.js && node --check bridge.js && node --check app.js && node --check data.js && node --check box-data.js && node --check game-data.js && node --check blocks-data.js && node --check nbt.js",
+    "test": "node _test/static-check.js && node _test/logic-test.js",
+    "test:api": "node server/selftest.js",
+    "test:bridge": "node _test/bridge-test.js",
+    "test:all": "npm run check && npm run test && npm run test:api && npm run test:bridge"
+  },
+  "engines": {
+    "node": ">=18.17"
+  }
+}

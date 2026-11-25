@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b1119">
+<meta name="color-scheme" content="dark">
+<meta name="robots" content="noindex,nofollow">
+<title>世界织卷 · 管理后台</title>
+<link rel="icon" type="image/svg+xml" href="../favicon.svg?v=2.0.3">
+<link rel="apple-touch-icon" href="../assets/icon-180.png?v=2.0.3">
+<link rel="manifest" href="admin.webmanifest">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<div class="admin-shell">
+  <header class="topbar">
+    <a class="brand" href="/admin/" aria-label="世界织卷管理后台">
+      <img src="../assets/icon-192.png?v=2.0.3" alt="" width="34" height="34">
+      <span class="brand-text"><b>世界织卷</b><i>ADMIN CONSOLE</i></span>
+      <span class="brand-tag">后台</span>
+    </a>
+    <div class="top-actions">
+      <span class="server-pill" id="serverPill"><i></i><span>连接中…</span></span>
+      <span class="admin-chip" id="adminChip" hidden><b id="adminChipName">admin</b><small>管理员</small></span>
+      <button class="icon-btn" id="logoutTop" type="button" title="退出登录" hidden aria-label="退出登录">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H4v16h6M14 8l4 4-4 4M8 12h10" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <section class="auth-view" id="authView">
+      <div class="auth-card">
+        <div class="auth-logo"><img src="../assets/icon-512.png?v=2.0.3" alt="世界织卷"></div>
+        <p class="kicker">WORLD WEAVE · ADMIN</p>
+        <h1 id="authTitle">管理后台</h1>
+        <p class="auth-sub" id="authSub">使用管理员账号密码登录，管理服务端账号与 APP 更新。</p>
+        <form id="authForm" class="auth-form" novalidate>
+          <label class="field"><span>管理员账号</span><input id="adminUser" name="username" autocomplete="username" placeholder="请输入管理员账号" maxlength="32" required></label>
+          <label class="field"><span>密码</span>
+            <span class="pwd-wrap"><input id="adminPass" name="password" type="password" autocomplete="current-password" placeholder="请输入密码" maxlength="128" required><button type="button" id="togglePwd">显示</button></span>
+          </label>
+          <label class="field" id="confirmField" hidden><span>确认密码</span><input id="adminPass2" type="password" autocomplete="new-password" placeholder="再输入一次密码" maxlength="128"></label>
+          <p class="auth-error" id="authError" role="alert"></p>
+          <button class="primary-btn" id="authSubmit" type="submit">登录后台</button>
+        </form>
+        <p class="auth-note" id="authNote">管理员凭据只保存在服务器本地，不会显示在 APP 中。</p>
+        <a class="back-app" href="/">← 返回世界织卷 APP</a>
+      </div>
+      <p class="auth-foot">世界织卷 · WORLD WEAVE ADMIN · 仅限授权管理员</p>
+    </section>
+
+    <section class="console-view" id="consoleView" hidden>
+      <aside class="sidebar">
+        <div class="side-user">
+          <span class="avatar" id="sideAvatar">A</span>
+          <span><b id="sideName">admin</b><small>管理员</small></span>
+        </div>
+        <nav class="side-nav" aria-label="后台导航">
+          <button class="nav-btn is-active" type="button" data-view="overview">
+            <span class="nav-ico">▦</span><span>概览</span><i>OVERVIEW</i>
+          </button>
+          <button class="nav-btn" type="button" data-view="users">
+            <span class="nav-ico">☷</span><span>账号管理</span><i>USERS</i>
+          </button>
+          <button class="nav-btn" type="button" data-view="messages">
+            <span class="nav-ico">✉</span><span>消息记录</span><i>MESSAGES</i>
+          </button>
+          <button class="nav-btn" type="button" data-view="update">
+            <span class="nav-ico">↥</span><span>APP 更新</span><i>UPDATE</i>
+          </button>
+        </nav>
+        <div class="side-foot">
+          <span>服务端 <b id="sideVersion">v2.0.3</b></span>
+          <span id="sideClock" class="mono">--:--</span>
+          <button class="logout-btn" type="button" id="logoutSide">退出登录</button>
+        </div>
+      </aside>
+
+      <div class="content">
+        <header class="content-head">
+          <div>
+            <p class="kicker" id="pageKicker">ADMIN · 01</p>
+            <h1 id="pageTitle">概览</h1>
+            <p class="page-sub" id="pageSub">服务端账号、会话与消息总览</p>
+          </div>
+          <div class="head-actions">
+            <button class="ghost-btn" type="button" id="refreshBtn">刷新</button>
+            <button class="ghost-btn only-mobile" type="button" id="menuBtn" aria-label="打开导航">菜单</button>
+          </div>
+        </header>
+
+        <section class="view" id="view-overview">
+          <div class="stat-grid" id="statGrid"></div>
+          <div class="overview-grid">
+            <article class="panel">
+              <div class="panel-head"><b>账号方式</b><small>服务端注册账号</small></div>
+              <div class="method-list" id="methodList"></div>
+            </article>
+            <article class="panel">
+              <div class="panel-head"><b>近 7 天注册</b><small>每日新增</small></div>
+              <div class="day-chart" id="dayChart"></div>
+            </article>
+          </div>
+          <article class="panel">
+            <div class="panel-head"><b>最近注册</b><small>只展示服务端账号，不含本机账号</small></div>
+            <div class="recent-list" id="recentList"></div>
+          </article>
+        </section>
+
+        <section class="view" id="view-users" hidden>
+          <div class="panel toolbar-panel">
+            <div class="search-box">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.2" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="m15.4 15.4 5 5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="square"/></svg>
+              <input id="userSearch" type="search" placeholder="搜索 UID / 显示名 / 账号 / 手机 / 邮箱" autocomplete="off">
+            </div>
+            <span class="mono count-label" id="userCount">0 个账号</span>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead><tr><th>账号</th><th>方式</th><th>联系方式</th><th>注册 / 最近登录</th><th>状态</th><th>操作</th></tr></thead>
+              <tbody id="userTable"></tbody>
+            </table>
+          </div>
+          <div class="pager" id="userPager"></div>
+          <p class="panel-note">本机账号（账号密码注册且只存在浏览器 localStorage）不会进入服务端，因此后台看不到这类账号；这里只管理服务端账号。停用账号会立即撤销它的在线会话。</p>
+        </section>
+
+        <section class="view" id="view-messages" hidden>
+          <div class="panel">
+            <div class="panel-head"><b>最近消息</b><small>最多 80 条 · 只读</small></div>
+            <div class="message-list" id="messageList"></div>
+          </div>
+        </section>
+
+        <section class="view" id="view-update" hidden>
+          <form class="panel update-form" id="updateForm">
+            <div class="panel-head"><b>APP 更新清单</b><small>保存后主 APP 的「检查更新」立即读取</small></div>
+            <div class="form-grid">
+              <label class="field"><span>版本号</span><input id="upVersion" placeholder="例如 2.0.3" required></label>
+              <label class="field"><span>发布日期</span><input id="upDate" placeholder="2026-12-01"></label>
+              <label class="field full"><span>更新包地址</span><input id="upUrl" placeholder="https://…/世界织卷APP-v2.0.3.apk"></label>
+              <label class="field"><span>文件名</span><input id="upFile" placeholder="世界织卷APP-v2.0.3.apk"></label>
+              <label class="field"><span>文件大小（字节）</span><input id="upSize" type="number" min="0" placeholder="0"></label>
+              <label class="field full"><span>SHA-256（可选，64 位）</span><input id="upSha" placeholder="留空则不校验"></label>
+              <label class="field full"><span>更新说明（每行一条）</span><textarea id="upNotes" rows="5" placeholder="本次更新内容…"></textarea></label>
+            </div>
+            <label class="check-line"><input id="upMandatory" type="checkbox"> 强制更新</label>
+            <div class="form-actions">
+              <button class="primary-btn" type="submit">保存更新清单</button>
+              <button class="ghost-btn" type="button" id="reloadUpdate">重新读取</button>
+            </div>
+            <p class="panel-note" id="updateHint">更新包地址留空时，APP 会显示「当前已是最新版本」，不会下载。</p>
+          </form>
+        </section>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="toast-root" id="toastRoot" aria-live="polite"></div>
+<div class="modal-root" id="modalRoot" hidden></div>
+<script src="admin.js"></script>
+</body>
+</html>
