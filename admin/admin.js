@@ -161,9 +161,9 @@
     try {
       const status = await api('/api/admin/status', { auth: false });
       state.status = status;
-      setServerPill(true, 'v' + (status.version || '2.0.3') + ' 在线');
+      setServerPill(true, 'v' + (status.version || '2.1.5') + ' 在线');
       const sv = $('#sideVersion');
-      if (sv) sv.textContent = 'v' + (status.version || '2.0.3');
+      if (sv) sv.textContent = 'v' + (status.version || '2.1.5');
       if (!status.initialized) {
         showAuth('setup');
         if (!status.setupAllowed) {

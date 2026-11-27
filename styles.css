@@ -1217,6 +1217,49 @@ html[data-theme="ocean"] .search-bar { background: rgba(9, 19, 25, .8); }
   border-color: var(--accent-border);
   box-shadow: 0 3px 0 var(--accent-shadow);
 }
+.resource-search { display: flex; gap: 7px; margin: 10px 0 8px; }
+.resource-search .input-wrap { flex: 1; }
+.resource-search .btn { flex: none; }
+.resource-view-tabs { display: flex; gap: 5px; margin-bottom: 8px; }
+.resource-view-tab { flex: 1; height: 31px; font-size: 8.5px; color: var(--muted-2); background: rgba(0,0,0,.18); border: 1px solid var(--line); border-radius: 7px; }
+.resource-view-tab.is-active { color: var(--accent-ink); background: var(--accent); border-color: var(--accent); font-weight: 800; }
+.resource-search-results > h3 { display: flex; justify-content: space-between; margin: 10px 2px 0; font-size: 10px; }
+.resource-search-results > h3 span { font-size: 7px; color: var(--muted-2); font-weight: 400; }
+.download-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; margin-top: 10px; }
+.download-card { display: flex; flex-direction: column; min-width: 0; overflow: hidden; background: linear-gradient(160deg, var(--surface), var(--surface-ink)); border: 1px solid var(--line); border-radius: 10px; }
+.download-card:hover { border-color: var(--accent-line); transform: translateY(-1px); }
+.download-cover { position: relative; display: flex; align-items: flex-end; justify-content: space-between; min-height: 82px; padding: 9px; background: linear-gradient(135deg, var(--cover), rgba(0,0,0,.35)); }
+.download-cover::after { content: ""; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.07) 1px, transparent 1px); background-size: 10px 10px; opacity: .45; }
+.download-cover b { position: relative; z-index: 1; font-family: var(--mono); font-size: 24px; line-height: 1; color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,.4); }
+.download-cover small { position: relative; z-index: 1; padding: 2px 5px; font-size: 6px; color: #fff; background: rgba(0,0,0,.35); border-radius: 3px; }
+.download-main { min-width: 0; padding: 7px; }
+.download-top { display: flex; justify-content: space-between; gap: 5px; }
+.download-top b { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 8.5px; }
+.download-top span { flex: none; font-size: 6px; color: var(--muted-2); }
+.download-main > small { display: block; margin-top: 2px; font-size: 6px; color: var(--muted-2); }
+.download-main p { margin: 4px 0; font-size: 7px; line-height: 1.4; color: var(--muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.download-tag { display: inline-block; padding: 1px 4px; font-size: 6px; color: var(--accent); background: var(--accent-soft); border-radius: 3px; }
+.download-card .res-go { position: absolute; right: 7px; bottom: 7px; }
+.download-card { position: relative; }
+.download-card .res-go { display: none; }
+.server-list { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+.server-row { display: flex; align-items: center; gap: 8px; padding: 8px; background: rgba(255,255,255,.025); border: 1px solid var(--line); border-radius: 9px; }
+.server-avatar { flex: none; display: grid; place-items: center; width: 34px; height: 34px; color: #0b1119; font-size: 14px; font-weight: 900; background: var(--c); border-radius: 8px; }
+.server-main { flex: 1; min-width: 0; }
+.server-top { display: flex; align-items: center; gap: 5px; }
+.server-top b { font-size: 9.5px; }
+.server-region { padding: 1px 4px; font-size: 6px; color: var(--muted-2); border: 1px solid var(--line); border-radius: 3px; }
+.server-main small { display: block; margin-top: 1px; font-size: 6.5px; color: var(--muted-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.server-main p { margin: 2px 0 0; font-size: 7px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.server-net { flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 3px; width: 76px; }
+.net-level { font-family: var(--mono); font-size: 10px; color: var(--accent); }
+.ping { display: block; width: 54px; height: 4px; overflow: hidden; background: rgba(255,255,255,.08); border-radius: 2px; }
+.ping i { display: block; height: 100%; background: var(--accent); border-radius: 2px; }
+.ping.is-mid i { background: var(--gold); }
+.ping.is-bad i { background: var(--danger); }
+.server-net small { font-size: 6px; color: var(--muted-2); }
+.server-net .mini-act { height: 18px; padding: 0 4px; font-size: 6px; }
+@media (max-width: 430px) { .download-grid { grid-template-columns: 1fr 1fr; } .download-cover { min-height: 70px; } .download-cover b { font-size: 20px; } }
 .resource-list { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
 .res-card {
   position: relative;
@@ -2093,6 +2136,10 @@ html.reduce-motion .ribbon { animation: none !important; }
 }
 
 .ms-panel { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+.ms-local-code { padding: 10px; text-align: center; background: var(--gold-soft); border: 1px dashed rgba(244,196,78,.4); border-radius: 9px; }
+.ms-local-code > span { display: block; font-size: 14px; font-weight: 800; letter-spacing: .12em; color: var(--gold); word-break: break-all; }
+.ms-local-code b { display: block; margin-top: 4px; font-size: 9px; }
+.ms-local-code small { display: block; margin: 3px 0 7px; font-size: 7px; line-height: 1.5; color: var(--muted-2); }
 .ms-code-row {
   display: flex; align-items: center; justify-content: space-between; gap: 10px;
   padding: 12px 14px;
@@ -3253,6 +3300,10 @@ span.about-avatar { display: grid; place-items: center; }
   .gm-grid { grid-template-columns: 1fr; }
   .gm-field.full { grid-column: auto; }
 }
+
+.command-subtabs { display: flex; gap: 5px; margin: 8px 0 9px; }
+.command-subtab { flex: 1; height: 28px; font-size: 8px; color: var(--muted-2); background: rgba(0,0,0,.18); border: 1px solid var(--line); border-radius: 6px; }
+.command-subtab.is-active { color: var(--accent-ink); background: var(--accent); border-color: var(--accent); font-weight: 800; }
 
 /* ---------- 指令盒 ---------- */
 .command-tabs { display: flex; gap: 5px; overflow-x: auto; margin-bottom: 8px; scrollbar-width: none; }

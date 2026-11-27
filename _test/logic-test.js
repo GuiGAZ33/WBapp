@@ -279,8 +279,8 @@ check('指令页包含版本切换', cmdHtml.includes('data-box-edition="java"')
 check('方块页渲染正常', blockHtml.includes('block-row') && !/\bundefined\b/.test(blockHtml));
 check('方块页包含 minecraft:stone', blockHtml.includes('minecraft:stone'));
 check('方块页同时显示数字 ID 与占位符', blockHtml.includes('block-num') && blockHtml.includes('—'));
-check('工具页渲染出 8 个工具', (toolHtml.match(/class="tool-card"/g) || []).length === 8, String((toolHtml.match(/class="tool-card"/g) || []).length));
-check('工具页包含种子 / 音乐 / Java / 联网 / 像素画 / 点阵字', ['MC种子查找器', 'MC红石音乐', 'Java 下载', '联网工具', 'MC像素画生成器', 'MC点阵字'].every((name) => toolHtml.includes(name)));
+check('工具页渲染出 6 个工具', (toolHtml.match(/class="tool-card"/g) || []).length === 6, String((toolHtml.match(/class="tool-card"/g) || []).length));
+check('工具页包含种子 / Java / 联网 / 像素画网站', ['MC种子查找器', 'Java 下载', '联网工具', '红石音乐 / 像素画生成网站'].every((name) => toolHtml.includes(name)));
 check('指令版本选择包含 Java 1.12.2', cmdHtml.includes('data-box-version="1.12.2"'));
 check('指令版本选择包含基岩 1.21.50', api.versionChipsHTML('bedrock').includes('data-box-version="1.21.50"'));
 
@@ -381,12 +381,12 @@ check('设置面板包含背景音乐入口', settingsHtml.includes('背景音�
 console.log('== 关于我们 ==');
 const aboutHtml = api.aboutUsHTML();
 check('关于我们包含作者 QQ', aboutHtml.includes('3335750182') && aboutHtml.includes('3692754827'));
-check('关于我们包含全部赞助商 QQ', ['2575104168', '1751249668', '2729262309', '3372731544', '1447017701'].every((qq) => aboutHtml.includes(qq)));
+check('关于我们包含全部赞助商 QQ', ['2575104168', '1751249668', '2729262309', '3372731544', '1447017701', '3657815839'].every((qq) => aboutHtml.includes(qq)));
 check('关于我们不再出现㘬可', !aboutHtml.includes('㘬可'));
 check('关于我们写出官方群号', aboutHtml.includes('1137437440'));
 check('关于我们包含合作作者 cty 与 Vayrm', aboutHtml.includes('cty') && aboutHtml.includes('Vayrm'));
 check('关于我们包含三个群号', ['1137154951', '1095886790', '1124692610'].every((g) => aboutHtml.includes(g)));
-check('关于我们包含所有头像图片', ['avatar-zaoan.jpg', 'avatar-zayu.jpg', 'avatar-muchen.jpg', 'avatar-vayrm.jpg', 'avatar-cty.jpg', 'avatar-gui.jpg', 'avatar-zhangwanqiu.jpg'].every((img) => aboutHtml.includes(img)));
+check('关于我们包含所有头像图片', ['avatar-zaoan.jpg', 'avatar-zayu.jpg', 'avatar-muchen.jpg', 'avatar-vayrm.jpg', 'avatar-cty.jpg', 'avatar-gui.jpg', 'avatar-zhangwanqiu.jpg', 'avatar-suz.jpg'].every((img) => aboutHtml.includes(img)));
 check('关于我们包含三个 APP 图片', ['app-yunxi.jpg', 'app-geekcat.jpg', 'app-yiye.jpg'].every((img) => aboutHtml.includes(img)));
 check('关于我们包含赞助我们图片', aboutHtml.includes('assets/sponsor-qr.png') && aboutHtml.includes('赞助我们'));
 check('关于我们所有群都可点击', (aboutHtml.match(/data-qq-group=/g) || []).length >= 4);

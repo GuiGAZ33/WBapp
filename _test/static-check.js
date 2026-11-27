@@ -105,7 +105,7 @@ for (const audio of ['lilypad.mp3', 'os-piano.mp3', 'bromeliad.mp3', 'aerie.mp3'
   check(`内置音频存在 ${audio}`, fs.existsSync(path.join(ROOT, 'assets/audio', audio)));
 }
 check('内置更新清单存在且版本一致', (() => {
-  try { return JSON.parse(update).version === '2.0.3' && data.includes("version: '2.0.3'"); } catch { return false; }
+  try { return JSON.parse(update).version === '2.1.5' && data.includes("version: '2.1.5'"); } catch { return false; }
 })());
 check('内置更新有下载进度与路径', app.includes('downloadAppUpdate') && app.includes('updateDownloadBar') && app.includes('installFile(full)'));
 check('账号找回需要联系作者', app.includes('function forgotPasswordHTML') && app.includes('需要联系作者本人'));
@@ -133,7 +133,7 @@ check('平板横屏使用左侧导航栏', css.includes('@media (min-width: 1000
 check('平板弹层改为居中对话框', css.includes('@keyframes sheetTabletIn') && css.includes('width: min(720px, calc(100% - 56px))'));
 check('平板使用安全区 padding', css.includes('env(safe-area-inset-left)') && css.includes('env(safe-area-inset-right)'));
 
-console.log('== 2.0.3 权限 / 存储 ==');
+console.log('== 2.1.5 权限 / 存储 ==');
 check('页面禁止双指缩放', html.includes('user-scalable=no') && css.includes('touch-action: pan-x pan-y'));
 check('首次启动权限门存在', html.includes('id="permissionLayer"') && app.includes('function showPermissionGateIfNeeded'));
 check('权限门要求全部权限', app.includes('必须允许全部权限') && app.includes("id: 'storage'") && app.includes("id: 'packages'"));
@@ -145,7 +145,7 @@ for (const f of ['android/AndroidManifest.xml', 'android/res/xml/file_paths.xml'
 }
 check('Android 清单包含存储与安装权限', fs.readFileSync(path.join(ROOT, 'android/AndroidManifest.xml'), 'utf8').includes('MANAGE_EXTERNAL_STORAGE'));
 
-console.log('== 2.0.3 APP角色 / GM ==');
+console.log('== 2.1.5 APP角色 / GM ==');
 check('APP主人账号固定且不存明文密码', app.includes("username: 'Rushi_MC'") && app.includes("qq: '3335750182'") && !app.includes('DYF145243'));
 check('超级管理员 10 个、管理员 50 个上限', app.includes('ROLE_LIMIT = { super: 10, admin: 50 }'));
 check('设置顶部三张角色卡', app.includes('function roleMastheadHTML') && app.includes("card('super'") && app.includes("card('owner'") && app.includes("card('admin'"));
@@ -155,7 +155,7 @@ check('管理员不能使用 GM / 添加管理员', app.includes("function gmAll
 check('GM 刷与删成对出现', app.includes('data-gm-run="give"') && app.includes('data-gm-run="clear-item"') && app.includes('data-gm-run="summon"') && app.includes('data-gm-run="kill"'));
 check('GM 仅生成命令不执行外部服务器', app.includes('GM 后台负责生成命令') && app.includes('不会直接连接你的服务器'));
 
-console.log('== 2.0.3 货币 / 商店 / 改名 ==');
+console.log('== 2.1.5 货币 / 商店 / 改名 ==');
 check('金锭兑换钻石为 1888 且单向说明', app.includes('e.gold < 1888') && app.includes('1888 金锭 → 1 钻石') && app.includes('不可反兑换'));
 check('答题金锭为 250 / 200 / 50', app.includes('score === 10 ? 250 : score === 9 ? 200 : score === 8 ? 50'));
 check('任务全完成奖励 100–200 金锭', app.includes('randomInt(100, 200)') && app.includes('每日任务全部完成'));
@@ -180,12 +180,12 @@ check('主题 id 齐全', ['grass', 'nether', 'end', 'ocean', 'sakura', 'amethys
 check('新夸克链接已写入', data.includes('https://pan.quark.cn/s/aa533c25cb16'));
 check('云析下载链接与提取码已更新', data.includes('https://pan.quark.cn/s/09c698b0e1ae?pwd=qshu') && data.includes("pwd: 'qshu'"));
 check('旧夸克链接与提取码已移除', !data.includes('371f8fd0153a') && !data.includes('W6iC') && !app.includes('W6iC'));
-check('关于我们包含新增赞助商 QQ', data.includes('3372731544') && data.includes('1447017701'));
+check('关于我们包含新增赞助商 QQ', data.includes('3372731544') && data.includes('1447017701') && data.includes('3657815839') && data.includes("name: 'suz'"));
 check('关于我们包含三个合作群', ['1137154951', '1095886790', '1124692610'].every((g) => data.includes(g)));
 for (const asset of [
   'assets/avatar-zaoan.jpg', 'assets/avatar-zayu.jpg', 'assets/avatar-muchen.jpg',
   'assets/avatar-vayrm.jpg', 'assets/avatar-cty.jpg', 'assets/avatar-gui.jpg',
-  'assets/avatar-zhangwanqiu.jpg', 'assets/sponsor-qr.png', 'assets/app-yunxi.jpg',
+  'assets/avatar-zhangwanqiu.jpg', 'assets/avatar-suz.jpg', 'assets/sponsor-qr.png', 'assets/app-yunxi.jpg',
   'assets/app-geekcat.jpg', 'assets/app-yiye.jpg'
 ]) {
   check(`图片资源存在 ${asset}`, fs.existsSync(path.join(ROOT, asset)));
@@ -241,12 +241,16 @@ check('答题难度数量满足 3 / 3 / 4', ['简单', '普通', '困难'].every
 check('Java 指令不少于 50 条', B.javaCommands.length >= 50, String(B.javaCommands.length));
 check('基岩指令不少于 35 条', B.bedrockCommands.length >= 35, String(B.bedrockCommands.length));
 check('方块条目不少于 200 条', B.blocks.length >= 200, String(B.blocks.length));
-check('工具共 8 个（与 2.0.0 一致）', B.tools.length === 8, String(B.tools.length));
+check('工具共 6 个（移除红石音乐 / 点阵字）', B.tools.length === 6, String(B.tools.length));
 check('登录页三个角色登录按钮', ['APP主人登录', '超级管理员登录', '管理员登录'].every((text) => app.includes(text)) && app.includes('data-action="login-role"'));
 check('签到日历与连续签到', app.includes('function calendarHTML') && app.includes('连续签到') && app.includes('randomInt(10, 50)'));
 check('设置指令盒与三种角色', app.includes("settingRowHTML('command-box'") && app.includes("const COMMAND_BOX_LABEL = { owner: 'APP主人', super: '超级管理员', admin: '管理员' }") && app.includes("data-command-role"));
 check('商店官方 / 玩家分区', app.includes('data-shop-view="official"') && app.includes('data-shop-view="player"') && app.includes('playerPriceCap'));
 check('搜打撤三地图与装备槽', app.includes('EXTRACT_MAPS') && app.includes("hard: {") && app.includes("['helmet', '头盔']") && app.includes('capacity >= 50'));
+check('资源分网站 / 下载 / 服务器', app.includes('RESOURCE_DOWNLOADS') && app.includes('RESOURCE_SERVERS') && app.includes('resourceSearch') && app.includes('data-resource-view="servers"'));
+check('微软 / Xbox 本地验证码', app.includes('randomMixedCode') && app.includes('data-ms-code-open') && app.includes('A–Z · 1–9 · a–z'));
+check('账号密码跨版本备份', app.includes('KEY_ACCOUNT_BACKUP') && app.includes('restoreAccountsFromBackup') && app.includes('backupAccounts'));
+check('搜打撤战力门槛', app.includes('power: 40') && app.includes('power: 80') && app.includes('战力不足'));
 check('复杂指令不少于 20 条', B.complexCommands.length >= 20, String(B.complexCommands.length));
 check('复杂指令字段完整', B.complexCommands.every((c) => c.id && c.name && c.cat && c.edition && c.desc && c.code && c.hint && typeof c.s === 'number'));
 check('复杂指令覆盖两种版本', new Set(B.complexCommands.map((c) => c.edition)).size === 2);
@@ -272,7 +276,7 @@ const badBlock = B.blocks.filter((b) => !b.i || !b.n || !b.en || !(b.num === nul
 check('方块字段与数字 ID 类型合法', badBlock.length === 0, String(badBlock.length));
 check('存在历史数字 ID 数据', B.blocks.filter((b) => typeof b.num === 'number').length > 150, String(B.blocks.filter((b) => typeof b.num === 'number').length));
 check('存在 1.13+ 无数字 ID 数据', B.blocks.filter((b) => b.num === null).length > 40, String(B.blocks.filter((b) => b.num === null).length));
-check('工具都有字段或自定义界面', B.tools.every((t) => (Array.isArray(t.fields) && t.fields.length > 0) || ['projection', 'seed', 'music', 'java', 'network', 'pixel', 'dot'].includes(t.kind)), B.tools.map((t) => t.id).join(','));
+check('工具都有字段或自定义界面', B.tools.every((t) => (Array.isArray(t.fields) && t.fields.length > 0) || ['projection', 'seed', 'java', 'network', 'pixel-site'].includes(t.kind)), B.tools.map((t) => t.id).join(','));
 check('表单工具都有执行器', B.tools.filter((t) => !t.kind).every((t) => new RegExp('\\n    ' + t.id + '\\(v\\) \\{').test(app)), B.tools.filter((t) => !t.kind).map((t) => t.id).join(','));
 check('像素画工具已接入', app.includes('function openPixelSheet') && app.includes('function exportPixelSchematic'));
 check('投影网站工具已接入', app.includes('function openProjectionSheet'));

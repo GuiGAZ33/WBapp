@@ -113,11 +113,11 @@ ALLOWED_ORIGINS=*     # 收紧时可写成 https://your.domain
 
 ```json
 {
-  "version": "2.0.3",
+  "version": "2.1.5",
   "releasedAt": "2026-12-01",
   "notes": ["本次更新内容"],
-  "packageUrl": "https://your.domain/download/世界织卷APP-v2.0.3.apk",
-  "filename": "世界织卷APP-v2.0.3.apk",
+  "packageUrl": "https://your.domain/download/世界织卷APP-v2.1.5.apk",
+  "filename": "世界织卷APP-v2.1.5.apk",
   "size": 23456789,
   "sha256": "APK 的 SHA-256（小写十六进制）",
   "minVersion": "1.0.0",
@@ -153,7 +153,7 @@ ADMIN_SESSION_TTL_HOURS=12
 - 后台可直接编辑 `update.json`，保存后主 APP 检查更新会立即读取；发布 APK 时填 `packageUrl`、`filename`、`size`、`sha256`。
 - 主 APP 的本机账号（只存浏览器 localStorage）不会出现在后台，这是设计差异，不是数据丢失。
 
-## 7. Android 权限 / 下载目录（2.0.3）
+## 7. Android 权限 / 下载目录（2.1.5）
 
 - `android/AndroidManifest.xml` 提供存储、通知、相机、麦克风、已安装应用、安装包与前台服务权限模板。
 - `android/res/xml/file_paths.xml` 提供下载目录 / 外部目录的 FileProvider 路径。

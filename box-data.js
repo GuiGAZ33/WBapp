@@ -478,10 +478,6 @@ window.BOX_DATA = {
       desc: '输入种子和版本，打开 Chunkbase 种子地图查找村庄、要塞与群系'
     },
     {
-      id: 'music', name: 'MC红石音乐', en: 'NOTEBLOCK', icon: 'sound', kind: 'music',
-      desc: 'Note Block Studio 与红石音乐社区网站，制作 / 分享音符盒音乐'
-    },
-    {
       id: 'java', name: 'Java 下载', en: 'JDK 8 / 17 / 21 / 26', icon: 'download', kind: 'java',
       desc: 'Java 8 / 17 / 21 / 26 官方下载入口，按 Minecraft 版本选择'
     },
@@ -490,12 +486,8 @@ window.BOX_DATA = {
       desc: '樱花内网穿透、蓝盾、playit.gg、Cloudflare Tunnel 等联机工具集合'
     },
     {
-      id: 'pixel', name: 'MC像素画生成器', en: 'PIXEL ART', icon: 'palette', kind: 'pixel',
-      desc: '导入图片生成 64–2048 像素画，可选全部 MC 方块，并导出 .schem 投影文件'
-    },
-    {
-      id: 'dot', name: 'MC点阵字', en: 'DOT MATRIX', icon: 'sparkle', kind: 'dot',
-      desc: '5–128 格点阵字，可选全部 MC 方块、字体与方向，导出 .schem 投影文件'
+      id: 'pixel', name: '红石音乐 / 像素画生成网站', en: 'MCPIXELART', icon: 'palette', kind: 'pixel-site',
+      desc: '跳转 mcpixelart.com，在线制作像素画与红石音乐'
     }
   ],
 

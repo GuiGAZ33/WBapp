@@ -4,7 +4,7 @@
    ========================================================= */
 
 window.APP_DATA = {
-  version: '2.0.3',
+  version: '2.1.5',
 
   /* ---------------- 关于我们 ----------------
      作者 / 赞助商 / 合作作者 / 其他APP / 赞助我们 信息集中在这里。
@@ -21,7 +21,8 @@ window.APP_DATA = {
       { name: '鬼', qq: '1751249668', role: '赞助商', avatar: 'assets/avatar-gui.jpg' },
       { name: '张晚秋', qq: '2729262309', role: '赞助商', avatar: 'assets/avatar-zhangwanqiu.jpg' },
       { name: 'cty', qq: '3372731544', role: '赞助商 · 云析作者', avatar: 'assets/avatar-cty.jpg' },
-      { name: 'Vayrm', qq: '1447017701', role: '赞助商 · 极客猫作者', avatar: 'assets/avatar-vayrm.jpg' }
+      { name: 'Vayrm', qq: '1447017701', role: '赞助商 · 极客猫作者', avatar: 'assets/avatar-vayrm.jpg' },
+      { name: 'suz', qq: '3657815839', role: '赞助商', avatar: 'assets/avatar-suz.jpg' }
     ],
     /* 合作作者：cty 对应云析；Vayrm 对应极客猫与一叶知音 */
     partners: [

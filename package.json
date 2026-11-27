@@ -1,6 +1,6 @@
 {
   "name": "world-weave-app",
-  "version": "2.0.3",
+  "version": "2.1.5",
   "private": true,
   "description": "世界织卷APP · 纯前端 + 零依赖账号服务（手机验证码 / QQ 邮箱 / 微软 Xbox / 离线账号）",
   "main": "server/server.js",

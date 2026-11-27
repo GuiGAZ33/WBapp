@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  世界织卷APP · Android 权限清单模板（2.0.3）
+  世界织卷APP · Android 权限清单模板（2.1.5）
   将本文件的权限与 application 属性合并到你的原生壳 AndroidManifest.xml。
   把 ${applicationId} 替换为你的包名，.MainActivity 替换为实际启动 Activity。
   运行时仍需在 MainActivity 中逐项申请；只在清单声明不会自动授权。

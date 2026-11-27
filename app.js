@@ -85,6 +85,7 @@
   const KEY_ECONOMY_PREFIX = 'szyj.economy.v1.';
   const KEY_SHOP = 'szyj.shop.v1';
   const KEY_PLAYER_SHOP = 'szyj.playerShop.v1';
+  const KEY_ACCOUNT_BACKUP = 'szyj.accountBackup.v1';
   const OWNER = {
     role: 'owner',
     username: 'Rushi_MC',
@@ -119,8 +120,13 @@
     settings: Object.assign({ theme: 'grass', sound: true, motion: true, notify: true, bgm: true, bgmTrack: 'lilypad', bgmVolume: 0.45, bgmPositions: {} }, savedSettings || {}),
     history: store.get(KEY_HISTORY, []),
     resourceFilter: 'all',
+    resourceView: 'sites',
+    resourceQuery: '',
+    downloadCat: '全部',
+    serverRegion: '全部',
     bedrockVersion: '1.21.50',
     boxMode: 'commands',
+    commandMode: 'search',
     boxEdition: 'java',
     boxVersion: {
       java: '1.21.4',
@@ -223,10 +229,48 @@
     list.push({ id: 'totem', name: '不死图腾', slot: 'totem', slotName: '图腾', tier: 3, color: '#f4c44e', power: 12, price: 1200, icon: 'sparkle' });
     return list;
   })();
+  const RESOURCE_DOWNLOADS = [
+    { id: 'rlcraft', name: 'RLCraft', cat: '整合包', author: 'Shivaxi', version: '1.12.2', size: '2.1 GB', color: '#c75b39', mono: 'RL', desc: '硬核生存整合包，真实生存、龙与高难度怪物。', url: 'https://www.curseforge.com/minecraft/modpacks/rlcraft' },
+    { id: 'atm10', name: 'All the Mods 10', cat: '整合包', author: 'ATM Team', version: '1.21', size: '4.8 GB', color: '#8b6cff', mono: 'ATM', desc: '大型科技 / 魔法整合包，任务线完整。', url: 'https://www.curseforge.com/minecraft/modpacks/all-the-mods-10' },
+    { id: 'better-mc', name: 'Better MC', cat: '整合包', author: 'Luna Pixel', version: '1.20.1', size: '3.2 GB', color: '#5abf7a', mono: 'BMC', desc: '优化与冒险并重的轻量整合包。', url: 'https://www.curseforge.com/minecraft/modpacks/better-mc-fabric-bmc1' },
+    { id: 'dawncraft', name: 'DawnCraft', cat: '整合包', author: 'DawnCraft Team', version: '1.18.2', size: '3.6 GB', color: '#e0a84e', mono: 'DC', desc: '魂系战斗、探索与 RPG 任务整合包。', url: 'https://www.curseforge.com/minecraft/modpacks/dawn-craft' },
+    { id: 'create-astral', name: 'Create: Astral', cat: '整合包', author: 'Create Astral', version: '1.18.2', size: '1.4 GB', color: '#57c7d4', mono: 'CA', desc: '机械动力 + 星空探索的科技整合包。', url: 'https://modrinth.com/modpack/create-astral' },
+    { id: 'vault-hunters', name: 'Vault Hunters', cat: '整合包', author: 'Iskall', version: '1.18.2', size: '2.8 GB', color: '#8ada5a', mono: 'VH', desc: 'RPG 地牢、职业与随机词条装备。', url: 'https://www.curseforge.com/minecraft/modpacks/vault-hunters-1-18-2' },
+    { id: 'sodium', name: 'Sodium', cat: '模组', author: 'CaffeineMC', version: '1.21.x', size: '1.2 MB', color: '#65e6df', mono: 'NA', desc: '大幅提升帧数的渲染优化模组。', url: 'https://modrinth.com/mod/sodium' },
+    { id: 'iris', name: 'Iris Shaders', cat: '模组', author: 'Iris Team', version: '1.21.x', size: '8.5 MB', color: '#57d6e8', mono: 'IR', desc: '让 Sodium 支持光影的兼容层。', url: 'https://modrinth.com/mod/iris' },
+    { id: 'jei', name: 'JEI', cat: '模组', author: 'mezz', version: '1.20.x', size: '1.5 MB', color: '#f0c35a', mono: 'JEI', desc: '物品与合成表查询，整合包必备。', url: 'https://modrinth.com/mod/jei' },
+    { id: 'create', name: 'Create', cat: '模组', author: 'simibubi', version: '1.20.1', size: '12 MB', color: '#c7a35a', mono: 'CR', desc: '机械动力，用齿轮与传送带建造工厂。', url: 'https://modrinth.com/mod/create' },
+    { id: 'ae2', name: 'Applied Energistics 2', cat: '模组', author: 'AlgorithmX2', version: '1.20.1', size: '9 MB', color: '#7ba9d8', mono: 'AE', desc: '数字存储与自动化网络。', url: 'https://modrinth.com/mod/ae2' },
+    { id: 'twilight', name: 'Twilight Forest', cat: '模组', author: 'Benimatic', version: '1.20.1', size: '35 MB', color: '#7a5cc4', mono: 'TF', desc: '暮色森林维度与 Boss 冒险。', url: 'https://www.curseforge.com/minecraft/mc-mods/the-twilight-forest' },
+    { id: 'complementary', name: 'Complementary Shaders', cat: '光影', author: 'EminGT', version: '1.21', size: '9 MB', color: '#6fb7e8', mono: 'CS', desc: '均衡画质与性能的经典光影。', url: 'https://www.complementary.dev/shaders' },
+    { id: 'bsl', name: 'BSL Shaders', cat: '光影', author: 'capttatsu', version: '1.21', size: '2 MB', color: '#f0a35a', mono: 'BSL', desc: '温暖柔和的天空与光照。', url: 'https://bitslablab.com/bslshaders/' },
+    { id: 'sildurs', name: "Sildur's Vibrant", cat: '光影', author: 'Sildur', version: '1.21', size: '1.5 MB', color: '#e85858', mono: 'SV', desc: '鲜艳色彩与轻量性能档位。', url: 'https://sildurs-shaders.github.io/' },
+    { id: 'replay', name: 'Replay Mod', cat: '模组', author: 'ReplayMod', version: '1.21', size: '6 MB', color: '#b48cff', mono: 'RP', desc: '录制与回放游戏画面，制作视频素材。', url: 'https://www.replaymod.com/' },
+    { id: 'fresh-animations', name: 'Fresh Animations', cat: '资源包', author: 'FreshLX', version: '1.21', size: '12 MB', color: '#8ada5a', mono: 'FA', desc: '让生物动作更自然的资源包。', url: 'https://modrinth.com/resourcepack/fresh-animations' },
+    { id: 'stay-true', name: 'Stay True', cat: '资源包', author: 'FredBob', version: '1.21', size: '8 MB', color: '#6fa8dc', mono: 'ST', desc: '保留原版风格的高清材质。', url: 'https://www.curseforge.com/minecraft/texture-packs/stay-true' },
+    { id: 'faithful', name: 'Faithful 32x', cat: '资源包', author: 'Faithful Team', version: '1.21', size: '6 MB', color: '#c9d1d6', mono: 'F32', desc: '32× 原版风格高清材质。', url: 'https://faithfulpack.net/' },
+    { id: 'bare-bones', name: 'Bare Bones', cat: '资源包', author: 'Pac', version: '1.21', size: '5 MB', color: '#d6b77a', mono: 'BB', desc: '极简宣传片风格材质包。', url: 'https://www.curseforge.com/minecraft/texture-packs/bare-bones-texture-pack' }
+  ];
+
+  const RESOURCE_SERVERS = [
+    { name: 'Minecraft 官方服务器', region: '国外', ip: 'play.minecraft.net', version: '1.21', players: '20k+', ping: 32, level: 'A', desc: 'Mojang 官方服务器与活动入口。', color: '#7ddc75' },
+    { name: 'Hypixel', region: '国外', ip: 'mc.hypixel.net', version: '1.8–1.21', players: '50k+', ping: 180, level: 'A', desc: '全球最大小游戏服务器。', color: '#f0c35a' },
+    { name: 'The Hive', region: '国外', ip: 'play.hivemc.com', version: '1.20+', players: '8k+', ping: 160, level: 'B+', desc: '小游戏与派对服务器。', color: '#f0a35a' },
+    { name: 'Mineplex', region: '国外', ip: 'us.mineplex.com', version: '1.8–1.20', players: '2k+', ping: 150, level: 'B', desc: '经典小游戏与冒险地图。', color: '#65e6df' },
+    { name: 'CubeCraft', region: '国外', ip: 'play.cubecraft.net', version: '1.20+', players: '4k+', ping: 140, level: 'B+', desc: 'Bedrock / Java 小游戏服务器。', color: '#57d6e8' },
+    { name: '2B2T', region: '国外', ip: 'connect.2b2t.org', version: '1.21', players: '1k+', ping: 210, level: 'C', desc: '无政府生存服务器，注意风险。', color: '#ef7474' },
+    { name: '花雨庭', region: '国内', ip: 'play.huayuting.com', version: '1.8–1.21', players: '10k+', ping: 38, level: 'A', desc: '国内综合小游戏服务器。', color: '#f3a6c8' },
+    { name: 'EC 服务器', region: '国内', ip: 'play.ecraft.net', version: '1.12–1.21', players: '5k+', ping: 45, level: 'A', desc: '生存、空岛与小游戏。', color: '#8ada5a' },
+    { name: 'MCBBS 服务器', region: '国内', ip: 'mc.mcbbs.net', version: '1.20+', players: '3k+', ping: 52, level: 'B+', desc: '社区联机与整合包服务器。', color: '#6fa8dc' },
+    { name: '星空服务器', region: '国内', ip: 'play.xingkong.net', version: '1.16–1.21', players: '2k+', ping: 48, level: 'B+', desc: 'RPG 与空岛生存。', color: '#b48cff' },
+    { name: '猫窝服务器', region: '国内', ip: 'play.maowo.fun', version: '1.20+', players: '1k+', ping: 60, level: 'B', desc: '休闲生存与建筑。', color: '#f0c35a' },
+    { name: '云梦服务器', region: '国内', ip: 'mc.yunmeng.fun', version: '1.12–1.21', players: '800+', ping: 66, level: 'B', desc: '生存、RPG 与副本。', color: '#57c7d4' }
+  ];
+
   const EXTRACT_MAPS = {
-    normal: { name: '普通地图', desc: '低战力 · 不掉装备 · 掉落背包物品', color: '#7ddc75', boss: 0.05, mini: 0.16, mult: 1 },
-    advanced: { name: '进阶地图', desc: '中战力 · 随机掉落装备', color: '#f0c35a', boss: 0.12, mini: 0.28, mult: 1.35 },
-    hard: { name: '困难地图', desc: '高战力 · 装备与物品全掉', color: '#ef7474', boss: 0.24, mini: 0.4, mult: 1.8 }
+    normal: { name: '普通地图', desc: '低战力 · 不掉装备 · 掉落背包物品', color: '#7ddc75', boss: 0.05, mini: 0.16, mult: 1, power: 0 },
+    advanced: { name: '进阶地图', desc: '中战力 · 随机掉落装备', color: '#f0c35a', boss: 0.12, mini: 0.28, mult: 1.35, power: 40 },
+    hard: { name: '困难地图', desc: '高战力 · 装备与物品全掉', color: '#ef7474', boss: 0.24, mini: 0.4, mult: 1.8, power: 80 }
   };
 
   /* 复杂指令编辑器：补全与防抖检查的临时状态 */
@@ -1601,53 +1645,75 @@
   }
 
   /* ---------------- 资源页 ---------------- */
+  function resourceSiteCardHTML(r) {
+    return `<a class="res-card" href="${esc(r.url)}" target="_blank" rel="noopener noreferrer" data-res-id="${r.id}" aria-label="打开 ${esc(r.name)}（新窗口）">
+      <span class="res-icon ${r.mono.length > 2 ? 'long' : ''}" style="--c:${r.color}">${esc(r.mono)}</span>
+      <div class="res-main"><div class="res-top"><h3>${esc(r.name)}</h3><span class="res-domain">${esc(r.domain)}</span></div><p class="res-main-desc">${esc(r.desc)}</p><div class="res-tags">${r.tags.map(t => `<span class="tag-mini">${esc(t)}</span>`).join('')}</div></div>
+      <span class="res-go">${SVG('external')}</span>
+    </a>`;
+  }
+
+  function downloadCardHTML(item) {
+    return `<a class="download-card" href="${esc(item.url)}" target="_blank" rel="noopener noreferrer">
+      <span class="download-cover" style="--cover:${item.color}"><b>${esc(item.mono)}</b><small>${esc(item.cat)}</small></span>
+      <div class="download-main"><div class="download-top"><b>${esc(item.name)}</b><span>${esc(item.version)}</span></div><small>${esc(item.author)} · ${esc(item.size)}</small><p>${esc(item.desc)}</p><span class="download-tag">${esc(item.cat)}</span></div>
+      <span class="res-go">${SVG('download')}</span>
+    </a>`;
+  }
+
+  function serverRowHTML(server) {
+    const pingClass = server.ping < 60 ? 'is-good' : server.ping < 120 ? 'is-mid' : 'is-bad';
+    return `<article class="server-row">
+      <span class="server-avatar" style="--c:${server.color}">${esc(server.name.slice(0, 1))}</span>
+      <div class="server-main"><div class="server-top"><b>${esc(server.name)}</b><span class="server-region">${esc(server.region)}</span></div><small class="mono">${esc(server.ip)} · ${esc(server.version)} · ${esc(server.players)} 在线</small><p>${esc(server.desc)}</p></div>
+      <div class="server-net"><span class="net-level">${esc(server.level)}</span><span class="ping ${pingClass}"><i style="width:${Math.max(8, 100 - server.ping / 3)}%"></i></span><small>${server.ping} ms</small><button class="mini-act" type="button" data-copy="${esc(server.ip)}">复制 IP</button></div>
+    </article>`;
+  }
+
   function renderResources(preserveScroll = false) {
     const host = $('#resourcePage');
     if (!host) return;
     const panel = document.querySelector('[data-panel="resources"]');
     const top = panel ? panel.scrollTop : 0;
-    const list = DATA.resources.filter(r => state.resourceFilter === 'all' || r.cat === state.resourceFilter);
+    const q = state.resourceQuery.trim().toLowerCase();
+    const search = (text) => !q || String(text).toLowerCase().includes(q);
+    const sites = DATA.resources.filter((r) => (state.resourceFilter === 'all' || r.cat === state.resourceFilter) && search([r.name, r.desc, r.tags.join(' '), r.cat].join(' ')));
+    const downloads = RESOURCE_DOWNLOADS.filter((d) => (state.downloadCat === '全部' || d.cat === state.downloadCat) && search([d.name, d.desc, d.cat, d.author].join(' ')));
+    const servers = RESOURCE_SERVERS.filter((s) => (state.serverRegion === '全部' || s.region === state.serverRegion) && search([s.name, s.desc, s.ip, s.region].join(' ')));
+    const total = DATA.resources.length + RESOURCE_DOWNLOADS.length + RESOURCE_SERVERS.length;
+    const searchMode = !!q;
     host.innerHTML = `
       <header class="page-head">
         <p class="kicker"><span class="kicker-block"></span>RESOURCES · 03</p>
-        <div class="page-head-row">
-          <div>
-            <h1>资源</h1>
-            <p class="page-sub">我的世界各种资源网站，点击卡片即可跳转。</p>
-          </div>
-          <span class="page-count mono">${String(DATA.resources.length).padStart(2, '0')}</span>
-        </div>
+        <div class="page-head-row"><div><h1>资源</h1><p class="page-sub">网站资源、下载资源与服务器资源，点击即可打开。</p></div><span class="page-count mono">${pad2(total)}</span></div>
       </header>
 
-      <section class="resource-banner" aria-label="资源导航概览">
-        <span class="rb-art">${SVG('chest')}</span>
-        <div class="rb-main">
-          <b>发现你的下一块世界</b>
-          <span>模组、光影、地图、皮肤与百科，一站直达。</span>
-        </div>
-        <div class="rb-count"><b>${DATA.resources.length}</b><span>SOURCES</span></div>
-      </section>
+      <div class="resource-search"><div class="input-wrap">${SVG('search')}<input id="resourceSearch" type="search" value="${esc(state.resourceQuery)}" placeholder="搜索所有资源：模组 / 整合包 / 光影 / 服务器" aria-label="搜索所有资源" autocomplete="off"></div><button class="btn btn-primary btn-sm" type="button" data-resource-search-go>${SVG('search')}搜索</button></div>
 
-      <div class="filter-row" role="tablist" aria-label="资源分类">
-        ${DATA.resourceCategories.map(c => `
-          <button class="chip ${state.resourceFilter === c.id ? 'is-active' : ''}" type="button" data-cat="${c.id}" role="tab" aria-selected="${state.resourceFilter === c.id}">${esc(c.name)}</button>`).join('')}
+      <div class="resource-view-tabs">
+        <button class="resource-view-tab ${state.resourceView === 'sites' && !searchMode ? 'is-active' : ''}" type="button" data-resource-view="sites">网站资源</button>
+        <button class="resource-view-tab ${state.resourceView === 'downloads' && !searchMode ? 'is-active' : ''}" type="button" data-resource-view="downloads">下载资源</button>
+        <button class="resource-view-tab ${state.resourceView === 'servers' && !searchMode ? 'is-active' : ''}" type="button" data-resource-view="servers">服务器资源</button>
       </div>
 
-      <div class="resource-list">
-        ${list.length ? list.map(r => `
-          <a class="res-card" href="${esc(r.url)}" target="_blank" rel="noopener noreferrer" data-res-id="${r.id}" aria-label="打开 ${esc(r.name)}（新窗口）">
-            <span class="res-icon ${r.mono.length > 2 ? 'long' : ''}" style="--c:${r.color}">${esc(r.mono)}</span>
-            <div class="res-main">
-              <div class="res-top"><h3>${esc(r.name)}</h3><span class="res-domain">${esc(r.domain)}</span></div>
-              <p class="res-main-desc">${esc(r.desc)}</p>
-              <div class="res-tags">${r.tags.map(t => `<span class="tag-mini">${esc(t)}</span>`).join('')}</div>
-            </div>
-            <span class="res-go">${SVG('external')}</span>
-          </a>`).join('') : `<div class="resource-empty">这个分类暂时还没有收录资源。</div>`}
-      </div>
-
-      <p class="resource-note">${SVG('info')}<span>以上均为第三方网站，点击后将在新窗口打开。请注意甄别下载内容，保护好自己的账号信息。</span></p>`;
-
+      ${searchMode ? `
+        <section class="resource-search-results">
+          <h3>搜索结果 <span>${sites.length + downloads.length + servers.length} 项</span></h3>
+          <div class="resource-list">${sites.map(resourceSiteCardHTML).join('')}</div>
+          <div class="download-grid">${downloads.map(downloadCardHTML).join('')}</div>
+          <div class="server-list">${servers.map(serverRowHTML).join('')}</div>
+          ${sites.length + downloads.length + servers.length ? '' : '<div class="resource-empty">没有找到匹配的资源。</div>'}
+        </section>` : state.resourceView === 'downloads' ? `
+        <div class="filter-row download-filter">${['全部', '整合包', '模组', '光影', '资源包'].map((cat) => `<button class="chip ${state.downloadCat === cat ? 'is-active' : ''}" type="button" data-download-cat="${cat}">${cat}</button>`).join('')}</div>
+        <div class="download-grid">${downloads.map(downloadCardHTML).join('') || '<div class="resource-empty">这个分类暂时没有下载资源。</div>'}</div>
+        <p class="resource-note">${SVG('info')}<span>下载资源来自 Modrinth、CurseForge 与作者官网；请确认游戏版本与加载器后再下载。</span></p>` : state.resourceView === 'servers' ? `
+        <div class="filter-row">${['全部', '国内', '国外'].map((region) => `<button class="chip ${state.serverRegion === region ? 'is-active' : ''}" type="button" data-server-region="${region}">${region}服务器</button>`).join('')}</div>
+        <div class="server-list">${servers.map(serverRowHTML).join('') || '<div class="resource-empty">没有匹配的服务器。</div>'}</div>
+        <p class="resource-note">${SVG('info')}<span>服务器延迟为参考值，实际延迟受网络、地区和服务器状态影响；进入服务器前请确认版本与规则。</span></p>` : `
+        <div class="filter-row" role="tablist" aria-label="网站分类">${DATA.resourceCategories.map((c) => `<button class="chip ${state.resourceFilter === c.id ? 'is-active' : ''}" type="button" data-cat="${c.id}">${esc(c.name)}</button>`).join('')}</div>
+        <div class="resource-list">${sites.map(resourceSiteCardHTML).join('') || '<div class="resource-empty">这个分类暂时还没有收录资源。</div>'}</div>
+        <p class="resource-note">${SVG('info')}<span>以上均为第三方网站，点击后将在新窗口打开。请注意甄别下载内容，保护好自己的账号信息。</span></p>`}
+    `;
     if (preserveScroll && panel) panel.scrollTop = top;
   }
 
@@ -1657,11 +1723,12 @@
     if (!host) return;
     const panel = document.querySelector('[data-panel="box"]');
     const top = panel ? panel.scrollTop : 0;
+    if (state.boxMode === 'complex') { state.boxMode = 'commands'; state.commandMode = 'complex'; }
     const count = state.boxMode === 'blocks'
       ? BOX.blocks.length
       : state.boxMode === 'tools'
         ? BOX.tools.length
-        : state.boxMode === 'complex'
+        : state.commandMode === 'complex'
           ? COMPLEX.length
           : BOX.javaCommands.length + BOX.bedrockCommands.length;
 
@@ -1679,24 +1746,21 @@
 
       <div class="box-mode" role="tablist" aria-label="百宝箱分类">
         <button class="box-mode-btn ${state.boxMode === 'commands' ? 'is-active' : ''}" type="button" role="tab" aria-selected="${state.boxMode === 'commands'}" data-box-mode="commands">${SVG('terminal')}指令大全</button>
-        <button class="box-mode-btn ${state.boxMode === 'complex' ? 'is-active' : ''}" type="button" role="tab" aria-selected="${state.boxMode === 'complex'}" data-box-mode="complex">${SVG('sparkle')}复杂指令</button>
         <button class="box-mode-btn ${state.boxMode === 'blocks' ? 'is-active' : ''}" type="button" role="tab" aria-selected="${state.boxMode === 'blocks'}" data-box-mode="blocks">${SVG('chest')}方块查询</button>
         <button class="box-mode-btn ${state.boxMode === 'tools' ? 'is-active' : ''}" type="button" role="tab" aria-selected="${state.boxMode === 'tools'}" data-box-mode="tools">${SVG('terminal')}实用工具</button>
       </div>
 
       ${state.boxMode === 'commands'
-        ? boxCommandsHTML()
-        : state.boxMode === 'complex'
-          ? boxComplexHTML()
-          : state.boxMode === 'blocks'
-            ? boxBlocksHTML()
-            : boxToolsHTML()}
+        ? `<div class="command-subtabs"><button class="command-subtab ${state.commandMode === 'search' ? 'is-active' : ''}" type="button" data-box-command-mode="search">指令速查</button><button class="command-subtab ${state.commandMode === 'complex' ? 'is-active' : ''}" type="button" data-box-command-mode="complex">复杂指令实验室</button></div>${state.commandMode === 'complex' ? boxComplexHTML() : boxCommandsHTML()}`
+        : state.boxMode === 'blocks'
+          ? boxBlocksHTML()
+          : boxToolsHTML()}
 
-      <p class="resource-note">${SVG('info')}<span>${state.boxMode === 'complex'
-        ? '复杂指令支持输入提示、实时语法检查与危险操作提醒；版本与「指令大全」共用，切换版本需要二次确认。'
+      <p class="resource-note">${SVG('info')}<span>${state.boxMode === 'commands' && state.commandMode === 'complex'
+        ? '复杂指令支持输入提示、实时语法检查与危险操作提醒；版本与「指令速查」共用，切换版本需要二次确认。'
         : '指令语法可在版本栏切换；高版本指令会灰显并标注所需版本。方块数字 ID 仅适用于 1.12.2 及更早版本。'}</span></p>`;
 
-    if (state.boxMode === 'complex' && state.complexResult) {
+    if (state.boxMode === 'commands' && state.commandMode === 'complex' && state.complexResult) {
       renderComplexResult(state.complexResult);
     }
     if (preserveScroll && panel) panel.scrollTop = top;
@@ -2637,6 +2701,7 @@
   function openToolSheet(id) {
     const tool = BOX.tools.find((t) => t.id === id);
     if (!tool) return;
+    if (tool.kind === 'pixel-site') { trackTask('pixel-open'); openBrowserLink('https://mcpixelart.com/'); return; }
     if (tool.kind === 'pixel') { trackTask('pixel-open'); openPixelSheet(); return; }
     if (tool.kind === 'projection') { openProjectionSheet(); return; }
     if (tool.kind === 'seed') { openSeedSheet(); return; }
@@ -3564,20 +3629,20 @@
   }
 
   function playerPriceCap(itemId) {
-    const item = shopItem(itemId);
+    const item = catalogItem(itemId);
     const base = item && item.priceGold ? item.priceGold : 1000;
     return Math.max(1, Math.floor(base * 1.1));
   }
 
   function listPlayerShopItem(itemId) {
     if (!state.session) { toast('请先登录账号', 'warn'); return; }
-    const item = shopItem(itemId);
-    if (!item || inventoryCount(itemId) <= 0) { toast('背包里没有这件物品', 'warn'); return; }
+    const item = catalogItem(itemId);
+    if (!item || anyItemCount(itemId) <= 0) { toast('背包里没有这件物品', 'warn'); return; }
     const cap = playerPriceCap(itemId);
     openSheet(`
       <div class="command-banner"><span>${SVG('box')}</span><div><b>上架到玩家商店</b><small>${esc(item.name)} · 官方参考价 ${item.priceGold || '无'} 金锭 · 最高 ${cap} 金锭（不超过官方 10%）</small></div></div>
       <form class="role-form" data-role-form="player-list" data-item-id="${esc(itemId)}" novalidate>
-        <div class="field"><div class="field-label"><span>上架数量</span><small>背包 ${inventoryCount(itemId)} 件</small></div><div class="input-wrap"><input name="count" type="number" min="1" max="${inventoryCount(itemId)}" value="1" required></div></div>
+        <div class="field"><div class="field-label"><span>上架数量</span><small>背包 ${anyItemCount(itemId)} 件</small></div><div class="input-wrap"><input name="count" type="number" min="1" max="${anyItemCount(itemId)}" value="1" required></div></div>
         <div class="field"><div class="field-label"><span>单价（金锭）</span><small>最高 ${cap}</small></div><div class="input-wrap"><input name="price" type="number" min="1" max="${cap}" value="${Math.min(cap, Math.max(1, Math.floor((item.priceGold || 100) * 0.8)))}" required></div></div>
         <p class="role-form-error" id="roleFormError" role="alert"></p>
         <button class="btn btn-primary login-submit" type="submit">上架商品</button>
@@ -3587,15 +3652,15 @@
   }
 
   function submitPlayerListing(itemId, count, price) {
-    const item = shopItem(itemId);
+    const item = catalogItem(itemId);
     const e = currentEconomy();
     if (!item || !e) throw new Error('商品不存在');
     const qty = Math.max(1, Math.floor(Number(count) || 1));
     const unit = Math.max(1, Math.floor(Number(price) || 1));
     const cap = playerPriceCap(itemId);
-    if (qty > inventoryCount(itemId)) throw new Error('上架数量超过背包数量');
+    if (qty > anyItemCount(itemId)) throw new Error('上架数量超过背包数量');
     if (unit > cap) throw new Error(`价格不能超过 ${cap} 金锭（官方价 110%）`);
-    removeInventory(itemId, qty);
+    removeAnyItem(itemId, qty);
     playerShopState.listings.push({
       id: 'ps_' + randomHex(5),
       sellerUid: state.session.uid,
@@ -3826,6 +3891,55 @@
     return allShopItems().find((item) => item.id === id) || null;
   }
 
+  function catalogItem(id) {
+    const shop = shopItem(id);
+    if (shop) return shop;
+    const gear = gearById(id);
+    if (gear) return { id: gear.id, name: gear.name, desc: `${gear.slotName} · 战力 +${gear.power}`, type: 'gear', priceGold: gear.price, icon: gear.icon, gear };
+    const block = PIXEL_BLOCKS.find((item) => item.block === id);
+    if (block) return { id: block.block, name: block.name, desc: '方块撤离物资', type: 'material', priceGold: 20, icon: 'box' };
+    return null;
+  }
+
+  function anyItemCount(id) {
+    const e = currentEconomy();
+    if (!e) return 0;
+    return (Number(e.inventory && e.inventory[id]) || 0) + (Number(e.extract && e.extract.stash && e.extract.stash[id]) || 0);
+  }
+
+  function removeAnyItem(id, count = 1) {
+    const e = currentEconomy();
+    if (!e || anyItemCount(id) < count) return false;
+    let left = count;
+    if (e.inventory && e.inventory[id]) {
+      const take = Math.min(left, Number(e.inventory[id]) || 0);
+      e.inventory[id] -= take;
+      if (e.inventory[id] <= 0) delete e.inventory[id];
+      left -= take;
+    }
+    if (left > 0 && e.extract && e.extract.stash && e.extract.stash[id]) {
+      const take = Math.min(left, Number(e.extract.stash[id]) || 0);
+      e.extract.stash[id] -= take;
+      if (e.extract.stash[id] <= 0) delete e.extract.stash[id];
+      left -= take;
+    }
+    if (left <= 0) saveEconomy();
+    return left <= 0;
+  }
+
+  function equipGearFromBag(id) {
+    const gear = gearById(id);
+    if (!gear) return;
+    const data = extractData();
+    if (!data) return;
+    if ((Number(data.stash[id]) || 0) <= 0) {
+      if (inventoryCount(id) <= 0) { toast('背包里没有这件装备', 'warn'); return; }
+      removeInventory(id, 1);
+      data.stash[id] = (Number(data.stash[id]) || 0) + 1;
+    }
+    equipExtractGear(id);
+  }
+
   function inventoryCount(id) {
     const e = currentEconomy();
     return e && e.inventory ? Math.max(0, Number(e.inventory[id]) || 0) : 0;
@@ -3917,9 +4031,9 @@
 
   function useInventoryItem(id) {
     if (!state.session) { toast('请先登录账号', 'warn'); return; }
-    const item = shopItem(id);
+    const item = catalogItem(id);
     const e = currentEconomy();
-    if (!item || !e || inventoryCount(id) <= 0) return;
+    if (!item || !e || anyItemCount(id) <= 0) return;
     if (item.type === 'frame') {
       e.frame = item.frame;
       saveEconomy();
@@ -3948,6 +4062,10 @@
       }
     } else if (item.type === 'role') {
       useRoleCard(item.role);
+    } else if (item.type === 'gear') {
+      equipGearFromBag(id);
+    } else if (item.type === 'material') {
+      toast(`${item.name} ×${anyItemCount(id)}，可在玩家商店上架`, 'info');
     } else if (item.type === 'custom') {
       toast(`「${item.name}」已使用（GM 商品）`, 'info');
     }
@@ -4194,13 +4312,13 @@
   function openBagSheet() {
     if (!state.session) { toast('请先登录账号，未登录不可使用背包', 'warn', 4200); openLogin(); return; }
     const e = currentEconomy();
-    const ids = Object.keys(e.inventory || {}).filter((id) => Number(e.inventory[id]) > 0);
+    const ids = Array.from(new Set(Object.keys(e.inventory || {}).concat(Object.keys(e.extract && e.extract.stash || {})))).filter((id) => anyItemCount(id) > 0);
     const rows = ids.map((id) => {
-      const item = shopItem(id);
+      const item = catalogItem(id);
       if (!item) return '';
-      const count = Number(e.inventory[id]) || 0;
+      const count = anyItemCount(id);
       const equipped = item.type === 'frame' ? e.frame === item.frame : item.type === 'title' ? e.title === item.title : false;
-      const actionLabel = equipped ? '使用中' : item.type === 'theme' ? '使用解锁' : item.type === 'role' ? '激活权限' : '使用';
+      const actionLabel = equipped ? '使用中' : item.type === 'theme' ? '使用解锁' : item.type === 'role' ? '激活权限' : item.type === 'gear' ? '装备' : item.type === 'material' ? '查看' : '使用';
       return `
         <div class="bag-row">
           <span class="bag-item-ico">${SVG(item.icon || 'box')}</span>
@@ -4268,8 +4386,41 @@
     };
   }
 
+  function backupAccounts() {
+    try {
+      const local = typeof localAccounts === 'function' ? localAccounts() : [];
+      store.set(KEY_ACCOUNT_BACKUP, {
+        version: (typeof DATA !== 'undefined' && DATA.version) || '',
+        at: Date.now(),
+        local: Array.isArray(local) ? local : [],
+        roles: {
+          superAdmins: roleState.data.superAdmins.slice(),
+          admins: roleState.data.admins.slice(),
+          blacklist: roleState.data.blacklist.slice()
+        }
+      });
+    } catch { /* ignore */ }
+  }
+
+  function restoreAccountsFromBackup() {
+    const backup = store.get(KEY_ACCOUNT_BACKUP, null);
+    if (!backup || typeof backup !== 'object') return;
+    if (!localAccounts().length && Array.isArray(backup.local) && backup.local.length) {
+      saveLocalAccounts(backup.local);
+      toast(`已从上一个版本恢复 ${backup.local.length} 个本机账号`, 'success', 4200);
+    }
+    if (!roleState.data.superAdmins.length && !roleState.data.admins.length && backup.roles) {
+      roleState.data.superAdmins = Array.isArray(backup.roles.superAdmins) ? backup.roles.superAdmins : [];
+      roleState.data.admins = Array.isArray(backup.roles.admins) ? backup.roles.admins : [];
+      roleState.data.blacklist = Array.isArray(backup.roles.blacklist) ? backup.roles.blacklist : [];
+      store.set(KEY_ROLE_DATA, roleState.data);
+    }
+    backupAccounts();
+  }
+
   function saveRoleData() {
     store.set(KEY_ROLE_DATA, roleState.data);
+    backupAccounts();
   }
 
   const ROLE_LABEL = { owner: 'APP主人', super: '超级管理员', admin: '管理员' };
@@ -5664,8 +5815,8 @@
       <article class="extract-map-card" style="--map-color:${map.color}">
         <span class="extract-map-ico">${SVG(id === 'hard' ? 'sparkle' : id === 'advanced' ? 'shield' : 'globe')}</span>
         <b>${map.name}</b><small>${map.desc}</small>
-        <em>BOSS ${Math.round(map.boss * 100)}% · 小BOSS ${Math.round(map.mini * 100)}%</em>
-        <button class="btn btn-primary btn-sm" type="button" data-extract-start="${id}">进入地图</button>
+        <em>战力 ≥ ${map.power} · BOSS ${Math.round(map.boss * 100)}% · 小BOSS ${Math.round(map.mini * 100)}%</em>
+        <button class="btn btn-primary btn-sm" type="button" data-extract-start="${id}" ${extractPower() < map.power ? 'disabled' : ''}>${extractPower() < map.power ? '战力不足' : '进入地图'}</button>
       </article>`).join('')}</div>
       <p class="download-note">每张地图每次进入都会重新生成地形、箱子、岩浆、刷怪笼与怪物；走到撤离点即可带走全部战利品。</p>`;
   }
@@ -5723,15 +5874,16 @@
     renderExtractionSheet();
   }
 
-  function randomLoot() {
+  function randomLoot(type = 'normal') {
     const pool = PIXEL_BLOCKS.filter((block) => block && block.name);
     const block = pool[randomInt(0, Math.min(pool.length - 1, 260))];
     const gearChance = Math.random();
-    if (gearChance < 0.18) {
+    const gearRate = type === 'hard' ? 0.48 : type === 'advanced' ? 0.3 : 0.16;
+    if (gearChance < gearRate) {
       const gear = EXTRACT_GEAR[randomInt(0, EXTRACT_GEAR.length - 1)];
       return { kind: 'gear', id: gear.id, name: gear.name, gear: true };
     }
-    if (gearChance < 0.24) return { kind: 'book', id: 'enchant-book', name: '附魔书', book: true };
+    if (gearChance < gearRate + 0.08) return { kind: 'book', id: 'enchant-book', name: '附魔书', book: true };
     return { kind: 'block', id: block ? block.block : 'minecraft:stone', name: block ? block.name : '石头' };
   }
 
@@ -5795,6 +5947,8 @@
   function startExtraction(type) {
     const data = extractData();
     if (!data) return;
+    const map = EXTRACT_MAPS[type] || EXTRACT_MAPS.normal;
+    if (extractPower() < map.power) { toast(`战力不足，需要 ${map.power} 战力`, 'warn', 4200); return; }
     if (!data.capacity) data.capacity = 10;
     extractRun = { type, grid: buildExtractMap(type), pos: { x: 0, y: 0 }, hp: 100, maxHp: 100, loot: [], encounter: null };
     data.runs = (data.runs || 0) + 1;
@@ -5818,7 +5972,8 @@
       toast('踩到岩浆，损失 15 生命', 'warn');
     } else if (tile.type === 'chest') {
       tile.type = 'floor';
-      addRunLoot(randomLoot());
+      const count = randomInt(1, extractRun.type === 'hard' ? 3 : 2);
+      for (let i = 0; i < count; i++) addRunLoot(randomLoot(extractRun.type));
     } else if (tile.type === 'spawner') {
       tile.type = 'floor';
       extractRun.encounter = makeMob('normal', EXTRACT_MAPS[extractRun.type].mult);
@@ -5837,8 +5992,8 @@
     const roll = extractPower() + randomInt(0, 12);
     if (roll >= enc.power) {
       toast(`击败「${enc.name}」`, 'success');
-      if (enc.boss) addRunLoot(randomLoot());
-      if (enc.mini || enc.boss) addRunLoot(randomLoot());
+      if (enc.boss) { addRunLoot(randomLoot(extractRun.type)); addRunLoot(randomLoot(extractRun.type)); }
+      if (enc.mini || enc.boss) addRunLoot(randomLoot(extractRun.type));
       extractRun.encounter = null;
     } else {
       const damage = Math.max(8, Math.round(enc.power * 0.35));
@@ -7916,6 +8071,7 @@
     clearLoginTimer();
     stopMsAuth();
     login.method = 'account';
+    login.msCode = '';
     login.mode = options.mode === 'register' ? 'register' : 'login';
     login.showOfficial = !!state.session || !!options.showOfficial;
     login.accountView = options.account && login.showOfficial ? options.account : login.showOfficial ? 'list' : 'offline';
@@ -8165,19 +8321,30 @@
     return deviceCodeFormHTML('xbox', 'Xbox 登录', 'XBOX');
   }
 
+  function randomMixedCode() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789abcdefghijklmnopqrstuvwxyz';
+    let code = '';
+    for (let i = 0; i < 10; i++) code += chars[randomInt(0, chars.length - 1)];
+    return code;
+  }
+
   function msPendingHTML() {
     const info = login.ms;
     if (!info) return '';
     return `
       <div class="ms-panel">
+        <div class="ms-local-code">
+          <span class="mono">LOCAL VERIFY · ${esc(login.msCode || randomMixedCode())}</span>
+          <b>复制验证码后打开官方链接</b>
+          <small>A–Z · 1–9 · a–z 随机 10 位；必须完成微软 / Xbox 官方登录后才能返回。</small>
+          <button class="btn btn-primary btn-block btn-sm" type="button" data-ms-code-open>${SVG('copy')}复制验证码并打开官方链接</button>
+        </div>
         <div class="ms-code-row">
           <span class="ms-code mono" id="msCode">${esc(info.userCode)}</span>
           <button class="btn btn-ghost btn-sm" type="button" data-copy="${esc(info.userCode)}">${SVG('copy')}复制</button>
         </div>
-        <button class="btn btn-primary btn-block" type="button" data-open-url="${esc(info.verificationUri)}">${SVG('external')}打开微软授权页</button>
-        <p class="ms-status" id="msStatus" role="status" aria-live="polite">等待你在微软页面完成授权…</p>
-        <p class="field-hint">代码 ${esc(info.userCode)} 有时效（约 ${Math.max(1, Math.round((info.expiresIn || 900) / 60))} 分钟），过期后请重新获取。</p>
-        <button class="btn btn-ghost btn-block" type="button" data-ms-cancel>取消授权</button>
+        <p class="ms-status" id="msStatus" role="status" aria-live="polite">等待你在官方页面完成授权…</p>
+        <p class="field-hint">官方验证码 ${esc(info.userCode)} 有时效（约 ${Math.max(1, Math.round((info.expiresIn || 900) / 60))} 分钟）。本地验证码仅用于本次登录校验，登录成功后自动进入。</p>
       </div>`;
   }
 
@@ -8187,6 +8354,7 @@
       login.msTimer = null;
     }
     login.ms = null;
+    login.allowBack = true;
   }
 
   function offlineFormHTML() {
@@ -8414,6 +8582,7 @@
 
   function saveLocalAccounts(list) {
     store.set(KEY_LOCAL_ACCOUNTS, list);
+    backupAccounts();
   }
 
   function localAccountKey(name) {
@@ -8600,6 +8769,8 @@
     login.submitting = true;
     login.method = 'account';
     login.accountView = kind;
+    login.msCode = randomMixedCode();
+    login.allowBack = false;
     const btn = document.querySelector('[data-ms-start]');
     setLoginLoading(btn, '正在申请微软设备码…');
     try {
@@ -8612,6 +8783,7 @@
       msPollLoop();
     } catch (err) {
       login.submitting = false;
+      login.allowBack = true;
       if (btn) setLoginLoading(btn, null);
       sfx('error');
       toast(apiErrorMessage(err), 'error', 4600);
@@ -8841,6 +9013,10 @@
         if (count) count.textContent = `${filteredComplex().length} / ${total}`;
         return;
       }
+      if (target.id === 'resourceSearch') {
+        state.resourceQuery = target.value;
+        return;
+      }
       if (target.id === 'complexInput') {
         onComplexInput();
         return;
@@ -8935,6 +9111,12 @@
     });
     document.addEventListener('keydown', (e) => {
       if (e.target && e.target.id === 'complexInput') onComplexKeyDown(e);
+      if (e.target && e.target.id === 'resourceSearch' && e.key === 'Enter') {
+        e.preventDefault();
+        state.resourceQuery = e.target.value;
+        state.resourceView = 'sites';
+        renderResources();
+      }
       if (e.target && e.target.id === 'chatInput' && e.key === 'Enter') {
         e.preventDefault();
         sendChat();
@@ -9330,10 +9512,53 @@
       return;
     }
 
+    const resourceView = e.target.closest('[data-resource-view]');
+    if (resourceView) {
+      state.resourceView = resourceView.dataset.resourceView;
+      state.resourceQuery = '';
+      renderResources();
+      sfx('tap');
+      return;
+    }
+
+    const downloadCat = e.target.closest('[data-download-cat]');
+    if (downloadCat) {
+      state.downloadCat = downloadCat.dataset.downloadCat;
+      renderResources();
+      sfx('tap');
+      return;
+    }
+
+    const serverRegion = e.target.closest('[data-server-region]');
+    if (serverRegion) {
+      state.serverRegion = serverRegion.dataset.serverRegion;
+      renderResources();
+      sfx('tap');
+      return;
+    }
+
+    if (e.target.closest('[data-resource-search-go]')) {
+      const input = $('#resourceSearch');
+      state.resourceQuery = input ? input.value : state.resourceQuery;
+      state.resourceView = 'sites';
+      renderResources();
+      sfx('tap');
+      return;
+    }
+
     const cat = e.target.closest('[data-cat]');
     if (cat) {
       state.resourceFilter = cat.dataset.cat;
       renderResources(true);
+      sfx('tap');
+      return;
+    }
+
+    const boxCommandMode = e.target.closest('[data-box-command-mode]');
+    if (boxCommandMode) {
+      state.commandMode = boxCommandMode.dataset.boxCommandMode === 'complex' ? 'complex' : 'search';
+      renderBox();
+      if (state.commandMode === 'complex' && state.complexCode) runComplexCheck();
       sfx('tap');
       return;
     }
@@ -9817,6 +10042,15 @@
   }
 
   function onLoginClick(e) {
+    const msCodeOpen = e.target.closest('[data-ms-code-open]');
+    if (msCodeOpen) {
+      if (!login.ms) { toast('授权信息尚未准备好，请稍候', 'warn'); return; }
+      copyText(login.msCode || '', false);
+      openBrowserLink(login.ms.verificationUri || 'https://www.microsoft.com/link');
+      toast('验证码已复制，请在官方页面完成登录', 'success', 4600);
+      return;
+    }
+
     const roleLogin = e.target.closest('[data-action="login-role"]');
     if (roleLogin) {
       const role = roleLogin.dataset.role;
@@ -10245,7 +10479,9 @@
 
   function init() {
     applySettings();
+    restoreAccountsFromBackup();
     roleValidateSession();
+    backupAccounts();
     if (state.session) loadDailyState();
     refreshDownloadPath(false).then(updatePathDisplays);
     restoreCustomMusic();

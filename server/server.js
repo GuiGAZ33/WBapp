@@ -538,7 +538,7 @@ const API_ROUTES = {
   'GET /api/admin/update': handleAdminGetUpdate,
   'POST /api/admin/update': handleAdminSaveUpdate,
   'GET /api/health': (req, res) => ok(res, {
-    version: '2.0.3',
+    version: '2.1.5',
     sms: config.isConfigured.sms,
     smsProvider: config.sms.provider,
     microsoft: config.isConfigured.microsoft,

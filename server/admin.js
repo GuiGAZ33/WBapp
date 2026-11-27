@@ -311,7 +311,7 @@ function readUpdate() {
 function writeUpdate(input) {
   const version = String((input && input.version) || '').trim();
   if (!/^\d+\.\d+\.\d+(?:[-+][A-Za-z0-9.\-]+)?$/.test(version)) {
-    throw fail(400, 'invalid_version', '版本号格式应为 2.0.3');
+    throw fail(400, 'invalid_version', '版本号格式应为 2.1.5');
   }
   const packageUrl = String((input && input.packageUrl) || '').trim();
   if (packageUrl && !/^https?:\/\//i.test(packageUrl) && !/^[A-Za-z0-9._\-\/]+$/.test(packageUrl)) {
